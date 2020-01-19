@@ -33,12 +33,12 @@ export default function App() {
         cache,
         ...apolloCilentOptions
       });
-      // const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
-      // if (isLoggedIn === null || isLoggedIn === "false") {
-      //   setIsLoggedIn(false);
-      // } else {
-      //   setIsLoggedIn(true);
-      // }
+      const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+      if (isLoggedIn === null || isLoggedIn === "false") {
+        setIsLoggedIn(false);
+      } else {
+        setIsLoggedIn(true);
+      }
       setLoaded(true);
       setClient(client);
     } catch (e) {
@@ -49,42 +49,10 @@ export default function App() {
     preLoad();
   }, []);
 
-  // const logUserIn = async () => {
-  //   try {
-  //     await AsyncStorage.setItem("isLoggedIn", "true");
-  //     setIsLoggedIn(true);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  // const logUserOut = async () => {
-  //   try {
-  //     await AsyncStorage.setItem("isLoggedIn", "false");
-  //     setIsLoggedIn(false);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
-
-  return loaded && client ? (
+  return loaded && client && isLoggedIn !== null ? (
     <ApolloProvider client={client}>
       <ThemeProvider theme={styles}>
-      {/* <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-        >
-          {isLoggedIn === true ? (
-            <TouchableOpacity onPress={logUserOut}>
-              <Text>Log Out</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity onPress={logUserIn}>
-              <Text>Log In</Text>
-            </TouchableOpacity>
-          )}
-        </View> */}
-
-        <AuthProvider>
+        <AuthProvider isLoggedIn={isLoggedIn}>
           <NavController />
         </AuthProvider>
       </ThemeProvider>
