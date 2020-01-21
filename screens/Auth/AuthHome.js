@@ -10,14 +10,17 @@ const View = styled.View`
 
 const Text = styled.Text``;
 
-export default ({ navigation }) => {
-  <View>
-      <Text>Auth Home</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text>Go to Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-          <Text>Go to Signup</Text>
-      </TouchableOpacity>
-  </View>
-};
+const Touchable = styled.TouchableOpacity``;
+
+export default ({ navigation }) => (
+    <View>
+        <Text>Auth Home</Text>
+        <Touchable onPress={() => navigation.navigate("Login")}>
+            <Text>Go to Login</Text>
+        </Touchable>
+        <Touchable onPress={() => navigation.navigate("Signup")}>
+            <Text>Go to Signup</Text>
+        </Touchable>
+    </View>
+);
+
