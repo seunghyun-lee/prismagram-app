@@ -5,7 +5,7 @@ import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
 import { useMutation } from "react-apollo-hooks";
-import { CONFIRM_SECRET } from "./AuthQueries";
+import { LOG_IN, CONFIRM_SECRET } from "./AuthQueries";
 import { useLogIn } from "../../AuthContext";
 
 const View = styled.View`
@@ -43,7 +43,7 @@ export default ({ navigation }) => {
             console.log(e);
             Alert.alert("Can't confirm secret");
         } finally {
-            setLoading(true);
+            setLoading(false);
         }
     };
     return (

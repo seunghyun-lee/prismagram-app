@@ -5,8 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ isLoggedIn: isLoggedInProp, children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(isLoggedInProp);
-  const logUserIn = async token => {
-    console.log(token);
+  const logUserIn = async token => {    
     try {
       await AsyncStorage.setItem("jwt", token);
       setIsLoggedIn(true);
