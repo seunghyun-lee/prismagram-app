@@ -1,5 +1,5 @@
 import React from "react";
-import { Platform, View, Text, TouchableOpacity } from "react-native";
+import { Platform, View, Image, Text, TouchableOpacity } from "react-native";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import { createStackNavigator, HeaderTitle } from "react-navigation-stack";
 import Home from "../screens/Tabs/Home";
@@ -8,27 +8,36 @@ import Notifications from "../screens/Tabs/Notifications";
 import Profile from "../screens/Tabs/Profile";
 import MessagesLink from "../components/MessagesLink";
 import NavIcon from "../components/NavIcon";
+import { stackStyles } from "./config";
 
 const stackFactory = (initialRoute, customConfig) => 
     createStackNavigator(
         {
             InitialRoute: {
                 screen: initialRoute,
-                navigationOptions: {...customConfig}
+                navigationOptions: {
+                    ...customConfig,
+                    headerStyle: { ...stackStyles }
+                }
             }
-        }
+        },
+        { headerLayoutPreset: "center" }
     );
 
-export default createBottomTabNavigator(
+export default createBottomTabNavigator (
     {    
         Home: {
             screen: stackFactory(Home, {
                 headerRight: () => <MessagesLink />,
-                headerTitle: () => <NavIcon name="logo-instagram" size={36} />
+                // headerTitle: () => <NavIcon name="logo-instagram" size={36} />
+                headerTitle: () => <Image style={{ height: 35 }} resizeMode="contain" source={require("../assets/logo.png")} />
             }),
             navigationOptions: {
-                tabBarIcon: (
-                    <NavIcon name={Platform.OS === "ios" ? "ios-home" : "md-home"} />
+                tabBarIcon: ({ focused }) => (
+                    <NavIcon
+                        focused={focused} 
+                        name={Platform.OS === "ios" ? "ios-home" : "md-home"} 
+                    />
                 )
             }
         },
@@ -37,8 +46,11 @@ export default createBottomTabNavigator(
                 title: "Search"
             }),
             navigationOptions: {
-                tabBarIcon: (
-                    <NavIcon name={Platform.OS === "ios" ? "ios-search" : "md-search"} />
+                tabBarIcon: ({ focused }) => (
+                    <NavIcon 
+                        focused={focused}
+                        name={Platform.OS === "ios" ? "ios-search" : "md-search"} 
+                    />
                 )
             }
         },
@@ -46,8 +58,12 @@ export default createBottomTabNavigator(
             screen: View,
             navigationOptions: {
                 tabBarOnPress: ({ navigation }) => navigation.navigate("PhotoNavigation"),
-                tabBarIcon: (
-                    <NavIcon name={Platform.OS === "ios" ? "ios-add" : "md-add"} />
+                tabBarIcon: ({ focused }) => (
+                    <NavIcon 
+                        focused={focused}
+                        size={38}
+                        name={Platform.OS === "ios" ? "ios-add" : "md-add"} 
+                    />
                 )
             }
         },
@@ -56,8 +72,19 @@ export default createBottomTabNavigator(
                 title: "Notifications"
             }),
             navigationOptions: {
-                tabBarIcon: (
-                    <NavIcon name={Platform.OS === "ios" ? "ios-heart" : "md-heart"} />
+                tabBarIcon: ({ focused }) => (
+                    <NavIcon 
+                        focused={focused}
+                        name={
+                            Platform.OS === "ios" 
+                                ? focused
+                                    ? "ios-heart" 
+                                    : "ios-heart-empty"
+                                : focused
+                                ? "md-heart"
+                                : "md-heart-empty"
+                            } 
+                    />
                 )
             }
         },
@@ -66,15 +93,21 @@ export default createBottomTabNavigator(
                 title: "Profile"
             }),
             navigationOptions: {
-                tabBarIcon: (
-                    <NavIcon name={Platform.OS === "ios" ? "ios-person" : "md-person"} />
+                tabBarIcon: ({ focused }) => (
+                    <NavIcon 
+                        focused={focused}
+                        name={Platform.OS === "ios" ? "ios-person" : "md-person"} 
+                    />
                 )
             }
         }
     },
     {
         tabBarOptions: {
-            showLabel: false
+            showLabel: false,
+            style: {
+                backgroundColor: "#FAFAFA"
+            }
         }
     }    
 );
