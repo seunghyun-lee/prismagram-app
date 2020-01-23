@@ -1,16 +1,30 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
+import { useMutation } from "react-apollo-hooks";
+import * as Facebook from "expo-facebook";
+import * as Google from 'expo-google-app-auth';
 import AuthButton from "../../components/AuthButton";
 import AuthInput from "../../components/AuthInput";
 import useInput from "../../hooks/useInput";
-import { useMutation } from "react-apollo-hooks";
 import { LOG_IN, CREATE_ACCOUT } from "./AuthQueries";
 
 const View = styled.View`
     justify-content: center;
     align-items: center;
     flex: 1;
+`;
+
+const FBContainer = styled.View`
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top-width: 1px;
+    border-color: ${props => props.theme.lightGreyColor};
+    border-style: solid;
+`;
+
+const GoogleContainer = styled.View`
+    margin-top: 20px;
 `;
 
 export default ({ navigation }) => {
@@ -59,6 +73,58 @@ export default ({ navigation }) => {
             setLoading(false);
         }
     };
+    const fbLogin = async () => {
+        try {
+            setLoading(true);
+            await Facebook.initializeAsync("181726123214031");
+            const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+                permissions: ["public_profile", "email"],
+            });
+            if (type === "success") {
+                // Get the user"s name using Facebook"s Graph API
+                const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=id,last_name,first_name,email`);
+                const { email, first_name, last_name } = await response.json();
+                updateFormData(email, first_name, last_name);
+                setLoading(false); 
+            } else {
+                // type === "cancel"
+            }
+          } catch ({ message }) {
+                alert(`Facebook Login Error: ${message}`);
+          }
+    };
+    const googleLogin = async () => {
+        const GOOGLE_ID = "161065041942-lds0ards8uj56fo2orvhrtcjrvfbamfi.apps.googleusercontent.com";
+        try {
+            setLoading(true);
+            // First- obtain access token from Expo's Google API
+            const result = await Google.logInAsync({
+                iosClientId: GOOGLE_ID,
+                scopes: ["profile", "email"]
+            });
+            if (result.type === "success") {
+                // Then you can use the Google REST API
+                const user = await fetch("https://www.googleapis.com/userinfo/v2/me", {
+                    headers: { Authorization: `Bearer ${result.accessToken}` },
+                });
+                const { email, family_name, given_name } = await user.json();
+                updateFormData(email, given_name, family_name);
+            } else {
+                return { cancelled: true };
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const updateFormData = (email, firstName, lastName) => {
+        emailInput.setValue(email);
+        fNameInput.setValue(firstName);
+        lNameInput.setValue(lastName);
+        const [username] = email.split("@");
+        usernameInput.setValue(username);
+    };
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View>
@@ -86,6 +152,22 @@ export default ({ navigation }) => {
                     autoCorrect={false}
                 />
                 <AuthButton loading={loading} onPress={handleSignup} text="Sign up" />
+                <FBContainer>
+                    <AuthButton 
+                        bgColor={"#2D4DA7"}
+                        loading={false}
+                        onPress={fbLogin}
+                        text="Connect Facebook"
+                    />
+                </FBContainer>
+                <GoogleContainer>
+                    <AuthButton
+                        bgColor={"#EE1922"}
+                        loading={false}
+                        onPress={googleLogin}
+                        text="Connect Google"
+                    />
+                </GoogleContainer>
             </View>
         </TouchableWithoutFeedback>
     );

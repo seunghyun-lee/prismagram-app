@@ -20,6 +20,7 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
   const preLoad = async () => {
     try {
+      // await AsyncStorage.clear(); // when you want to log out manually then just clear storage
       await Font.loadAsync({
         ...Ionicons.font
       });
