@@ -96,9 +96,11 @@ const Post = ({
                     </HeaderUserContainer>
                 </Touchable>
             </Header>            
-            <Swiper
-                showsPagination={false}
+            <Swiper                
                 style={{ height: constants.height / 2.5 }}
+                paginationStyle={{ position: "absolute", bottom: -25 }}
+                dotStyle={{ width: 4, height: 4 }}
+                activeDotStyle={{ width: 4, height: 4 }}
             >
                 {files.map(file => (
                     <Image 
