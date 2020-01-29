@@ -21,6 +21,11 @@ export const SEARCH = gql`
     }
 `;
 
+const SquareContainer = styled.View`
+    flex-direction: row;
+    flex-wrap: wrap;
+`;
+
 const SearchPresenter = ({ term, shouldFetch }) => {
     const [refreshing, setRefreshing] = useState(false);
     const { data, loading, refetch } = useQuery(SEARCH, {
@@ -48,10 +53,12 @@ const SearchPresenter = ({ term, shouldFetch }) => {
         >
             {loading ? (
                 <Loader />
-            ) : (                
-                data &&
-                data.searchPost &&
-                data.searchPost.map(post => <SquarePhoto key={post.id} {...post} />)                
+            ) : (      
+                <SquareContainer>
+                    {data &&
+                    data.searchPost &&
+                    data.searchPost.map(post => <SquarePhoto key={post.id} {...post} />)}
+                </SquareContainer>          
             )}
         </ScrollView>
     );
