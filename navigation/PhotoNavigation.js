@@ -26,6 +26,10 @@ const PhotoTabs = createMaterialTopTabNavigator(
         tabBarOptions: {
             indicatorStyle: {
                 backgroundColor: styles.blackColor,
+                marginBottom: 20
+            },
+            labelStyle: {
+                color: styles.blackColor,
                 fontWeight: "600"
             },
             style: {
