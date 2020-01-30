@@ -10,6 +10,15 @@ const View = styled.View`
     flex: 1;
 `;
 
+const Button = styled.TouchableOpacity`
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    
+`;
+
 const Text = styled.Text``;
 
 export default () => {
@@ -22,7 +31,9 @@ export default () => {
     };
     const getPhotos = async () => {
         try {
-            const { assets } = await MediaLibrary.getAssetsAsync();
+            const { assets } = await MediaLibrary.getAssetsAsync({
+                sortBy: MediaLibrary.SortBy.creationTime
+            });
             const [firstPhoto] = assets;
             setSelected(firstPhoto);
             setAllPhotos(assets);
